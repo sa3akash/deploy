@@ -21,6 +21,9 @@ RUN npm run build
 # Stage 2: Run the built code
 FROM node:16-alpine
 
+# Install PM2 globally
+RUN npm install -g pm2
+
 # Set the working directory
 WORKDIR /app
 
@@ -43,5 +46,5 @@ COPY --from=builder --chown=shakil:nodejs /app/dist ./dist
 USER shakil
 EXPOSE 5000
 
-# Define the command to run the application
-CMD ["node", "dist/server.js"]
+# Define the command to run the application with PM2
+CMD ["pm2-runtime", "start","dist/server.js", "-i", "0"]
